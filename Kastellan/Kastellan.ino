@@ -18,11 +18,14 @@ AccessController AC; // = new AccessController::AccessController();
 EthernetClient client;
 EthernetServer server(80);
 EthernetClient incomingClient;
-byte mac[]= { 0x00,0x1A,0xB6,0x02,0xBB,0xAF };
+
+byte mac[]= { 0x00,0x1A,0xB6,0x02,0xFE,0xFD };
+//byte mac[]= { 0x00,0x1A,0xB6,0x02,0xBB,0xAF };
 byte gateToDoorMap[]= { 6,2,3,4,5,1 };
 int doorToPinMap[] = { PC_7, PD_3, PE_5, PC_6, PC_5, PC_4 };
 //char serverName[] = "systems.techvalleycenterofgravity.com";
 //char serverName[] = "192.168.11.250";
+byte thisIP = 16;  // The last quad in the IP address 192.168.13.xxx
 char serverName[] = "198.199.88.110";
 char loggingServerName[] = "198.199.88.110";
 char recordsPath[] = "/kastellan/cardlist.txt";
@@ -54,9 +57,11 @@ void setup()
   digitalWrite(EEPROM_WP_PIN,1);
   pinMode(EEPROM_PWR_PIN,OUTPUT);
   digitalWrite(EEPROM_PWR_PIN,1);  // Turn on the EEPROM.
+  SERIAL_PORT.println("EEPROM setup----------");
   ee.begin();
   confirmEEPROMPresent();
   wg.begin();
+  
   pinMode(LED, OUTPUT);
         
   pinMode(D1_LED, OUTPUT);
@@ -317,7 +322,7 @@ void handleServerRequest(EthernetClient myClient) {
 }
 
 void initializeEthernet() {
-  IPAddress ip = IPAddress(192,168,13,22);
+  IPAddress ip = IPAddress(192,168,13,thisIP);
   IPAddress dns = IPAddress(192,168,11,250);
   IPAddress gw = IPAddress(192,168,13,1);
   IPAddress mask = IPAddress(255,255,255,0);
